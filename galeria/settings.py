@@ -82,6 +82,8 @@ with open ('run/secrets/db_host', 'r') as file:
 with open ('run/secrets/db_port', 'r') as file:
     db_port = file.read().replace('\n', '')
 
+#kupa siku lmao 
+
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
