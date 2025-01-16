@@ -19,4 +19,3 @@ class Artist(models.Model):
     surname = models.CharField(max_length=30)
     date_of_birth = models.DateField()
     date_of_death = models.DateField(null=True, blank=True)
-
