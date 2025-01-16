@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,8 +82,6 @@ with open ('run/secrets/db_host', 'r') as file:
     db_host = file.read().replace('\n', '')
 with open ('run/secrets/db_port', 'r') as file:
     db_port = file.read().replace('\n', '')
-
-#kupa siku lmao 
 
 DATABASES = {
    'default': {
