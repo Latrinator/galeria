@@ -19,6 +19,10 @@ def bananas(request):
     template = loader.get_template('bananas.html')
     return HttpResponse(template.render())
 
+def employee(request):
+    template = loader.get_template('employee.html')
+    return HttpResponse(template.render())
+
 def api_artists(request):
     artists = Artist.objects.all().values('name','surname','date_of_birth','date_of_death')
     return JsonResponse(list(artists), safe=False)

@@ -17,7 +17,8 @@
             font-size: 30px;
         }
         .button-container {
-            text-align: center;
+            display: flex;
+            justify-content: center;
             margin: 20px 0;
         }
         button {
@@ -62,6 +63,20 @@
         th {
             background-color: #FFb5c0;
         }
+        .highlight {
+            background-color: yellow;
+        }
+        .search-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .search-container input {
+            width: 50%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid black;
+            border-radius: 5px;
+        }
     </style>
     <script>
         function showArtists() {
@@ -89,14 +104,45 @@
                     document.getElementById('content').innerHTML = output;
                 });
         }
+        function searchTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const table = document.querySelector('table');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let rowContainsSearchTerm = false;
+
+                for (let j = 0; j < cells.length; j++) {
+                    const cell = cells[j];
+                    const cellText = cell.textContent.toLowerCase();
+
+                    if (cellText.includes(searchTerm)) {
+                        rowContainsSearchTerm = true;
+                        cell.innerHTML = cellText.replace(new RegExp(searchTerm, 'gi'), match => `<span class="highlight">${match}</span>`);
+                    } else {
+                        cell.innerHTML = cellText; // Remove previous highlights
+                    }
+                }
+
+                if (rowContainsSearchTerm) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
     </script>
 </head>
 <body>
-    <button class="back-button" onclick="window.location.href='/polls'">Back to Login</button>
+    <button class="back-button" onclick="window.location.href='/polls/employee'">Back to Login</button>
     <h1>Gallery</h1>
     <div class="button-container"></div>
         <button onclick="showArtists()">Show Artists</button>
         <button onclick="showExhibits()">Show Exhibits</button>
+    </div>
+    <div class="search-container" style="text-align: center; margin: 20px 0;">
+        <input type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
     </div>
     <div id="content"></div>
 </body>
