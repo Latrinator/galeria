@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 52px;
+        }
+        h2 {
+            font-size: 30px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #FF69b4;
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        button:hover {
+            background-color: #ff00ff;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #FF69b4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-button:hover {
+            background-color: #ff00ff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 2px solid black;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            font-size: 18px;
+        }
+        th {
+            background-color: #FFb5c0;
+        }
+    </style>
+    <script>
+        function showArtists() {
+            fetch('/polls/api/artists')
+                .then(response => response.json())
+                .then(data => {
+                    let output = '<h2>Artists</h2><table border="1"><tr><th>Name</th><th>Surname</th><th>Date of Birth</th><th>Date of Death</th></tr>';
+                    data.forEach(artist => {
+                        output += `<tr><td>${artist.name}</td><td>${artist.surname}</td><td>${artist.date_of_birth}</td><td>${artist.date_of_death}</td></tr>`;
+                    });
+                    output += '</table>';
+                    document.getElementById('content').innerHTML = output;
+        });
+        }
+
+        function showExhibits() {
+            fetch('/polls/api/exhibits')
+                .then(response => response.json())
+                .then(data => {
+                    let output = '<h2>Exhibits</h2><table border="1"><tr><th>Title</th><th>Artist</th><th>Type</th><th>Height(cm)</th><th>Width(cm)</th><th>Weight(kg)</th></tr>';
+                    data.forEach(exhibit => {
+                        output += `<tr><td>${exhibit.title}</td><td>${exhibit.id_artist__name} ${exhibit.id_artist__surname}</td><td>${exhibit.type}</td><td>${exhibit.height}</td><td>${exhibit.width}</td><td>${exhibit.weight}</td></tr>`;
+                    });
+                    output += '</table>';
+                    document.getElementById('content').innerHTML = output;
+                });
+        }
+    </script>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='/polls'">Back to Login</button>
+    <h1>Gallery</h1>
+    <div class="button-container"></div>
+        <button onclick="showArtists()">Show Artists</button>
+        <button onclick="showExhibits()">Show Exhibits</button>
+    </div>
+    <div id="content"></div>
+</body>
+</html>
+

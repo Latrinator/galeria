@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 52px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #FF69b4;
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        button:hover {
+            background-color: #ff00ff;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #FF69b4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-button:hover {
+            background-color: #ff00ff;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='/logowanie'">Back to Login</button>
+    <h1>Employee Portal</h1>
+    <div class="button-container">
+        <button onclick="window.location.href='/bananas'">Search</button>
+        <button onclick="window.location.href='/bananas'">Add</button>
+        <button onclick="window.location.href='/bananas'">Renting</button>
+        <button onclick="window.location.href='/bananas'">Storage and Exhibitions</button>
+    </div>
+</body>
+</html>
