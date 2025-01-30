@@ -121,7 +121,7 @@
                         rowContainsSearchTerm = true;
                         cell.innerHTML = cellText.replace(new RegExp(searchTerm, 'gi'), match => `<span class="highlight">${match}</span>`);
                     } else {
-                        cell.innerHTML = cellText; // Remove previous highlights
+                        cell.innerHTML = cellText; 
                     }
                 }
 
