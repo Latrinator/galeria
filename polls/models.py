@@ -47,6 +47,6 @@ class Exhibition(models.Model):
 class Rented(models.Model):
     id_rented = models.AutoField(primary_key=True)
     id_exhibit = models.ForeignKey('Exhibit', on_delete=models.CASCADE)
-    id_renter = models.ForeignKey('Gallery', on_delete=models.CASCADE)
+    id_renter = models.ForeignKey('Renter', on_delete=models.CASCADE)
     since = models.DateField()
     until = models.DateField(null=True, blank=True)

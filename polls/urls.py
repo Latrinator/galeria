@@ -12,6 +12,7 @@ urlpatterns = [
     path("add/", views.add, name='add'),
     path("storage/", views.storage, name='storage'),
     path("exhibition/", views.exhibition, name='exhibition'),
+    path('renting/', views.renting, name='renting'),
 
     path("api/artists/", views.api_artists, name='api_artists'),
     path('api/exhibits/', views.api_exhibits, name='api_exhibits'),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('add_exhibit/', views.add_exhibit, name='add_exhibit'),
 
     path('add_storage/', views.add_storage, name='add_storage'),
-    path('add_exhibition/', views.add_exhibition, name='add_exhibition')
+    path('add_exhibition/', views.add_exhibition, name='add_exhibition'),
+    path('add_rented/', views.add_rented, name='add_rented')
 ]
 

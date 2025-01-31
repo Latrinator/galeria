@@ -41,6 +41,11 @@ def exhibition(request):
     template = loader.get_template('exhibition.html')
     return HttpResponse(template.render())
 
+@login_required
+def renting(request):
+    template = loader.get_template('renting.html')
+    return HttpResponse(template.render())
+
 #################################################
 
 def api_artists(request):
@@ -211,3 +216,44 @@ def add_exhibition(request):
 
         return redirect('employee')
     return render(request, 'exhibition.html')
+
+@login_required
+@csrf_exempt
+def add_rented(request):
+    if request.method == 'POST':
+        id_exhibit = request.POST['id_exhibit']
+        id_renter = request.POST['id_renter']
+        since = request.POST['since']
+        until = request.POST['until']
+        
+        try:
+            exhibit = Exhibit.objects.get(id_exhibit=id_exhibit)
+        except Exhibit.DoesNotExist:
+            error_message = "The exhibit ID does not exist."
+            return render(request, 'renting.html', {'error_message': error_message})
+
+        try:
+            renter = Renter.objects.get(id_renter=id_renter)
+        except Renter.DoesNotExist:
+            error_message = "The renter ID does not exist."
+            return render(request, 'renting.html', {'error_message': error_message})
+        
+        if until < since:
+            since, until = until, since
+        
+        if Rented.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or \
+           Storage.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or \
+           Exhibition.objects.filter(id_exhibit=exhibit, until__gt=since).exists():
+            error_message = "The since date conflicts with an existing record in Rented, Storage, or Exhibition."
+            return render(request, 'renting.html', {'error_message': error_message})
+        
+
+        Rented.objects.create(id_exhibit=exhibit, id_renter=renter, since=since, until=until)
+        
+        # Set the status of the exhibit to "wypożyczony"
+        exhibit.status = "wypożyczony"
+        exhibit.save()
+        
+        return redirect('employee')
+    
+    return render(request, 'renting.html')
