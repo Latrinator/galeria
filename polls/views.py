@@ -162,6 +162,9 @@ def add_storage(request):
             error_message = "The exhibit ID does not exist."
             return render(request, 'storage.html', {'error_message': error_message})
         
+        if date_of_death == '':
+            date_of_death = None
+
         if until < since:
             since, until = until, since
         
@@ -200,6 +203,9 @@ def add_exhibition(request):
             error_message = "The gallery ID does not exist."
             return render(request, 'exhibition.html', {'error_message': error_message})
         
+        if date_of_death == '':
+            date_of_death = None
+
         if until < since:
             since, until = until, since
         
@@ -238,6 +244,9 @@ def add_rented(request):
             error_message = "The renter ID does not exist."
             return render(request, 'renting.html', {'error_message': error_message})
         
+        if date_of_death == '':
+            date_of_death = None
+
         if until < since:
             since, until = until, since
         
@@ -250,7 +259,6 @@ def add_rented(request):
 
         Rented.objects.create(id_exhibit=exhibit, id_renter=renter, since=since, until=until)
         
-        # Set the status of the exhibit to "wypożyczony"
         exhibit.status = "wypożyczony"
         exhibit.save()
         
