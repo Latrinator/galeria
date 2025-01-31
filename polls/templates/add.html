@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 52px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #FF69b4;
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        button:hover {
+            background-color: #ff00ff;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #FF69b4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-button:hover {
+            background-color: #ff00ff;
+        }
+        .form-container {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .form-container form {
+            display: inline-block;
+            text-align: left;
+        }
+        .form-container label{
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-container input{
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #FF69b4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #ff00ff;
+        }
+    </style>
+
+    <script>
+    function showForm(formId) {
+        document.querySelectorAll('.form-container').forEach(form => form.style.display = 'none');
+        document.getElementById(formId).style.display = 'block';
+    }
+
+    </script>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='{% url 'employee' %}'">Back to Employee</button>
+    <h1>Add Data</h1>
+    <div class="button-container">
+        <button onclick="showForm('addArtistForm')">Add an Artist</button>
+        <button onclick="showForm('addRenterForm')">Add a Renter</button>
+        <button onclick="showForm('addGalleryForm')">Add a Gallery</button>
+        <button onclick="showForm('addExhibitForm')">Add an Exhibit</button>
+    </div>
+
+    <div id="addArtistForm" class="form-container">
+        <h2>Add an Artist</h2>
+        <form action="{% url 'add_artist' %}" method="POST">
+            {% csrf_token %}
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+            <label for="surname">Surname</label>
+            <input type="text" id="surname" name="surname" required>
+            <label for="date_of_birth">Date of Birth</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" required>
+            <label for="date_of_death">Date of Death</label>
+            <input type="date" id="date_of_death" name="date_of_death">
+            <button type="submit">Add Artist</button>
+        </form>
+    </div>
+
+    <div id="addRenterForm" class="form-container">
+        <h2>Add a Renter</h2>
+        <form action="{% url 'add_renter' %}" method="POST">
+            {% csrf_token %}
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+            <label for="localisation">Localisation</label>
+            <input type="text" id="localisation" name="localisation" required>
+            <button type="submit">Add Renter</button>
+        </form>
+    </div>
+
+    <div id="addGalleryForm" class="form-container">
+        <h2>Add a Gallery</h2>
+        <form action="{% url 'add_gallery' %}" method="POST">
+            {% csrf_token %}
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+            <label for="localisation">Localisation</label>
+            <input type="text" id="localisation" name="localisation" required>
+            <button type="submit">Add Gallery</button>
+        </form>
+    </div>
+
+    <div id="addExhibitForm" class="form-container">
+        <h2>Add an Exhibit</h2>
+        <form action="{% url 'add_exhibit' %}" method="POST">
+            {% csrf_token %}
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required>
+            <label for="id_artist">id_Artist</label>
+            <input type="text" id="id_artist" name="id_artist" required>
+            <label for="type">Type</label>
+            <input type="text" id="type" name="type" required>
+            <label for="height">Height</label>
+            <input type="number" id="height" name="height" required>
+            <label for="width">Width</label>
+            <input type="number" id="width" name="width" required>
+            <label for="weight">Weight</label>
+            <input type="number" id="weight" name="weight" required>
+            <button type="submit">Add Exhibit</button>
+        </form>
+    </div>
+</body>
+</html>
