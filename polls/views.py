@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.http import JsonResponse
 from .models import Artist,Exhibit,Storage,Gallery,Renter,Exhibition,Rented
-
+from datetime import datetime
 
 
 def guest(request):
@@ -162,11 +162,11 @@ def add_storage(request):
             error_message = "The exhibit ID does not exist."
             return render(request, 'storage.html', {'error_message': error_message})
         
-        if date_of_death == '':
-            date_of_death = None
-
-        if until < since:
-            since, until = until, since
+        if until == '':
+            until = None
+        if until != None:
+            if until < since:
+                since, until = until, since
         
         if Rented.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
             Storage.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
@@ -203,11 +203,12 @@ def add_exhibition(request):
             error_message = "The gallery ID does not exist."
             return render(request, 'exhibition.html', {'error_message': error_message})
         
-        if date_of_death == '':
-            date_of_death = None
+        if until == '':
+            until = None
 
-        if until < since:
-            since, until = until, since
+        if until != None:
+            if until < since:
+                since, until = until, since
         
         if Rented.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
             Storage.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
@@ -244,11 +245,19 @@ def add_rented(request):
             error_message = "The renter ID does not exist."
             return render(request, 'renting.html', {'error_message': error_message})
         
-        if date_of_death == '':
-            date_of_death = None
+        if until == '':
+            until = None
 
-        if until < since:
-            since, until = until, since
+        if until != None:
+
+            since_date = datetime.strptime(since, '%Y-%m-%d')
+            until_date = datetime.strptime(until, '%Y-%m-%d')
+            if (until_date - since_date).days > 30:
+                error_message = "The rental period is longer than 30 days."
+                return render(request, 'renting.html', {'error_message': error_message})
+            
+            if until < since:
+                since, until = until, since
         
         if Rented.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or \
            Storage.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or \
