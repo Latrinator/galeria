@@ -33,6 +33,13 @@ def add(request):
     template = loader.get_template('add.html')
     return HttpResponse(template.render())
 
+@login_required
+def storage(request):
+    template = loader.get_template('storage.html')
+    return HttpResponse(template.render())
+
+
+
 def api_artists(request):
     artists = Artist.objects.all().values('id_artist','name','surname','date_of_birth','date_of_death')
     return JsonResponse(list(artists), safe=False)
@@ -62,6 +69,9 @@ def api_rented(request):
 def api_exhibitions(request):
     exhibitions = Exhibition.objects.all().values('id_exhibition','id_exhibit','id_gallery','since','until')
     return JsonResponse(list(exhibitions), safe=False)
+
+
+
 
 @login_required
 @csrf_exempt
@@ -112,14 +122,49 @@ def add_exhibit(request):
         height = request.POST['height']
         width = request.POST['width']
         weight = request.POST['weight']
+        status = request.POST['status']
+        is_valuable = request.POST['is_valuable']
 
-        # Fetch the Artist instance
         try:
             artist = Artist.objects.get(id_artist=id_artist)
         except Artist.DoesNotExist:
             error_message = "The artist ID does not exist."
             return render(request, 'bananas.html', {'error_message': error_message})
-
-        Exhibit.objects.create(title=title, id_artist=artist, type=type, height=height, width=width, weight=weight)
+        
+        if is_valuable == 'True':
+             Exhibit.objects.create(title=title, id_artist=artist, type=type, height=height, width=width, weight=weight,status=status, is_valuable=True)
+        if is_valuable == 'False':
+            Exhibit.objects.create(title=title, id_artist=artist, type=type, height=height, width=width, weight=weight,status=status, is_valuable=False)
         return redirect('employee')
     return render(request, 'add.html')
+
+@login_required
+@csrf_exempt
+def add_storage(request):
+    rented = Rented.objects.all()
+    storage = Storage.objects.all()
+    exhibition = Exhibition.objects.all()
+    if request.method == 'POST':
+        id_exhibit = request.POST['id_exhibit']
+        cause = request.POST['cause']
+        since = request.POST['since']
+        until = request.POST['until']
+        
+        try:
+            exhibit = Exhibit.objects.get(id_exhibit=id_exhibit)
+        except Exhibit.DoesNotExist:
+            error_message = "The exhibit ID does not exist."
+            return render(request, 'bananas.html', {'error_message': error_message})
+        
+        if until < since:
+            since, until = until, since
+        
+        if Rented.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
+            Storage.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
+            Exhibition.objects.filter(id_exhibit=exhibit, until__gt=since).exists():
+            error_message = "The since date conflicts with an existing record in Rented, Storage, or Exhibition."
+            return render(request, 'bananas.html', {'error_message': error_message})
+      
+        Storage.objects.create(id_exhibit=exhibit, cause=cause, since=since, until=until)
+        return redirect('employee')
+    return render(request, 'storage.html')

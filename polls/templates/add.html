@@ -58,12 +58,17 @@
             display: block;
             margin-bottom: 5px;
         }
-        .form-container input{
+        .form-container input, .form-container select {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
+        }
+        .form-container select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
         }
         .form-container button {
             width: 100%;
@@ -89,7 +94,7 @@
     </script>
 </head>
 <body>
-    <button class="back-button" onclick="window.location.href='{% url 'employee' %}'">Back to Employee</button>
+    <button class="back-button" onclick="window.location.href='{% url 'employee' %}'">Back to Portal</button>
     <h1>Add Data</h1>
     <div class="button-container">
         <button onclick="showForm('addArtistForm')">Add an Artist</button>
@@ -154,6 +159,13 @@
             <input type="number" id="width" name="width" required>
             <label for="weight">Weight</label>
             <input type="number" id="weight" name="weight" required>
+            <label for="status">Status</label>
+            <input type="text" id="status" name="status" required>
+            <label for="is_valuable">Valuable</label>
+            <select id="is_valuable" name="is_valuable" required>
+                <option value="True">True</option>
+                <option value="False">False</option>
+            </select>
             <button type="submit">Add Exhibit</button>
         </form>
     </div>
