@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Exhibition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 52px;
+        }
+        .form-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .form-container form {
+            display: inline-block;
+            text-align: left;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #FF69b4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #ff00ff;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #FF69b4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-button:hover {
+            background-color: #ff00ff;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='{% url 'employee' %}'">Back to Employee</button>
+    <h1>Add Exhibition</h1>
+    <div class="form-container">
+        {% if error_message %}
+            <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+        <form action="{% url 'add_exhibition' %}" method="POST">
+            {% csrf_token %}
+            <label for="id_exhibit">Exhibit ID</label>
+            <input type="text" id="id_exhibit" name="id_exhibit" required>
+            <label for="id_gallery">Gallery ID</label>
+            <input type="text" id="id_gallery" name="id_gallery" required>
+            <label for="since">Since</label>
+            <input type="date" id="since" name="since" required>
+            <label for="until">Until</label>
+            <input type="date" id="until" name="until">
+            <button type="submit">Add Exhibition</button>
+        </form>
+    </div>
+</body>
+</html>

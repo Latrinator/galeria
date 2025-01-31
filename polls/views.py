@@ -6,9 +6,7 @@ from django.template import loader
 from django.http import JsonResponse
 from .models import Artist,Exhibit,Storage,Gallery,Renter,Exhibition,Rented
 
-def logowanie(request):
-    template = loader.get_template('logowanie.html')
-    return HttpResponse(template.render())
+
 
 def guest(request):
     template = loader.get_template('guest.html')
@@ -38,7 +36,12 @@ def storage(request):
     template = loader.get_template('storage.html')
     return HttpResponse(template.render())
 
+@login_required
+def exhibition(request):
+    template = loader.get_template('exhibition.html')
+    return HttpResponse(template.render())
 
+#################################################
 
 def api_artists(request):
     artists = Artist.objects.all().values('id_artist','name','surname','date_of_birth','date_of_death')
@@ -70,8 +73,7 @@ def api_exhibitions(request):
     exhibitions = Exhibition.objects.all().values('id_exhibition','id_exhibit','id_gallery','since','until')
     return JsonResponse(list(exhibitions), safe=False)
 
-
-
+#################################################
 
 @login_required
 @csrf_exempt
@@ -138,12 +140,11 @@ def add_exhibit(request):
         return redirect('employee')
     return render(request, 'add.html')
 
+#################################################
+
 @login_required
 @csrf_exempt
 def add_storage(request):
-    rented = Rented.objects.all()
-    storage = Storage.objects.all()
-    exhibition = Exhibition.objects.all()
     if request.method == 'POST':
         id_exhibit = request.POST['id_exhibit']
         cause = request.POST['cause']
@@ -154,7 +155,7 @@ def add_storage(request):
             exhibit = Exhibit.objects.get(id_exhibit=id_exhibit)
         except Exhibit.DoesNotExist:
             error_message = "The exhibit ID does not exist."
-            return render(request, 'bananas.html', {'error_message': error_message})
+            return render(request, 'storage.html', {'error_message': error_message})
         
         if until < since:
             since, until = until, since
@@ -163,8 +164,50 @@ def add_storage(request):
             Storage.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
             Exhibition.objects.filter(id_exhibit=exhibit, until__gt=since).exists():
             error_message = "The since date conflicts with an existing record in Rented, Storage, or Exhibition."
-            return render(request, 'bananas.html', {'error_message': error_message})
+            return render(request, 'storage.html', {'error_message': error_message})
       
         Storage.objects.create(id_exhibit=exhibit, cause=cause, since=since, until=until)
+
+        exhibit.status = "magazynowany"
+        exhibit.save()
+
         return redirect('employee')
     return render(request, 'storage.html')
+
+@login_required
+@csrf_exempt
+def add_exhibition(request):
+    if request.method == 'POST':
+        id_exhibit = request.POST['id_exhibit']
+        id_gallery = request.POST['id_gallery']
+        since = request.POST['since']
+        until = request.POST['until']
+        
+        try:
+            exhibit = Exhibit.objects.get(id_exhibit=id_exhibit)
+        except Exhibit.DoesNotExist:
+            error_message = "The exhibit ID does not exist."
+            return render(request, 'exhibition.html', {'error_message': error_message})
+        
+        try:
+            gallery = Gallery.objects.get(id_gallery=id_gallery)
+        except Gallery.DoesNotExist:
+            error_message = "The gallery ID does not exist."
+            return render(request, 'exhibition.html', {'error_message': error_message})
+        
+        if until < since:
+            since, until = until, since
+        
+        if Rented.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
+            Storage.objects.filter(id_exhibit=exhibit, until__gt=since).exists() or\
+            Exhibition.objects.filter(id_exhibit=exhibit, until__gt=since).exists():
+            error_message = "The since date conflicts with an existing record in either Rented, Storage, or Exhibition."
+            return render(request, 'exhibition.html', {'error_message': error_message})
+        
+        Exhibition.objects.create(id_exhibit=exhibit, id_gallery=gallery, since=since, until=until)
+
+        exhibit.status = "eksponowany"
+        exhibit.save()
+
+        return redirect('employee')
+    return render(request, 'exhibition.html')

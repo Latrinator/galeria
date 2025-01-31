@@ -3,14 +3,15 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    #path("", views.logowanie, name="logowanie"),
     path("", include("django.contrib.auth.urls")),
     path("guest/", views.guest, name='guest'),
     path("bananas/", views.bananas, name='bananas'),
     path('employee/', views.employee, name='employee'),
+
     path('search/', views.search, name='search'),
     path("add/", views.add, name='add'),
     path("storage/", views.storage, name='storage'),
+    path("exhibition/", views.exhibition, name='exhibition'),
 
     path("api/artists/", views.api_artists, name='api_artists'),
     path('api/exhibits/', views.api_exhibits, name='api_exhibits'),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('add_gallery/', views.add_gallery, name='add_gallery'),
     path('add_exhibit/', views.add_exhibit, name='add_exhibit'),
 
-    path('add_storage/', views.add_storage, name='add_storage')
+    path('add_storage/', views.add_storage, name='add_storage'),
+    path('add_exhibition/', views.add_exhibition, name='add_exhibition')
 ]
 
